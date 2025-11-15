@@ -3,8 +3,8 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 
 export const metadata: Metadata = {
-  title: "FurniHub - Multi-Vendor Furniture Marketplace",
-  description: "Discover premium furniture from top vendors",
+  title: "Kamara - Furniture Marketplace",
+  description: "Discover premium furniture from top vendors around you",
 };
 
 export default function RootLayout({
