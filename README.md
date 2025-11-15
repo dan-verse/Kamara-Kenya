@@ -1,6 +1,6 @@
-## Getting Started
+## View
 
-Run the development server:
+Run the development server after checking installation of all requirements, check package.json:
 
 ```bash
 npm run dev
