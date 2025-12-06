@@ -2,7 +2,7 @@ export interface User {
   id: number;
   email: string;
   name: string;
-  role: "customer" | "vendor";
+  role: 'customer' | 'vendor';
 }
 
 export interface Product {
@@ -28,5 +28,5 @@ export interface Order {
   items: CartItem[];
   total: number;
   date: string;
-  status: "Processing" | "Shipped" | "Delivered";
+  status: 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
 }

@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
-  title: "Kamara - Furniture Marketplace",
-  description: "Discover premium furniture from top vendors around you",
+  title: "FurniHub - Where Every Space Tells Your Story",
+  description: "Discover timeless furniture pieces that transform your house into a home. Shop our curated collection of sofas, tables, chairs, and more.",
+  keywords: ["furniture", "home decor", "interior design", "modern furniture", "vintage furniture"],
 };
 
 export default function RootLayout({
@@ -13,14 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="antialiased">
-        <div className="min-h-screen bg-gray-50">
-          <Navigation />
-          <main className="pt-24 pb-16 px-4 sm:px-6 max-w-7xl mx-auto">
-            {children}
-          </main>
-        </div>
+    <html lang="en" className={inter.variable}>
+      <body className="font-sans antialiased bg-white text-gray-900">
+        <Navigation />
+        <main className="min-h-screen">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
