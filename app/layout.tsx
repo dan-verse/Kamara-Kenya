@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "FurniHub - Where Every Space Tells Your Story",
+  title: "Kamara - Where Every Space Tells Your Story",
   description: "Discover timeless furniture pieces that transform your house into a home. Shop our curated collection of sofas, tables, chairs, and more.",
   keywords: ["furniture", "home decor", "interior design", "modern furniture", "vintage furniture"],
 };
