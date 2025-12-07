@@ -1,263 +1,265 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { User, MapPin, Phone, Mail, Edit2, Save, Package } from 'lucide-react';
-import { useAuthStore, useStore } from '@/lib/store';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAuthStore, useStore } from '@/lib/store';
+import { Package, User, Mail, Calendar, Store, Edit2, Save, X } from 'lucide-react';
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user } = useAuthStore();
-  const { orders } = useStore();
+  const user = useAuthStore((state) => state.user);
+  const orders = useStore((state) => state.orders);
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState({
-    name: '',
-    email: '',
-    phone: '+254 700 000 000',
-    address: 'Nairobi, Kenya',
-    city: 'Nairobi',
-    postalCode: '00100'
-  });
+  const [editedName, setEditedName] = useState('');
+
+  const userOrders = user ? orders.filter(order => order.userId === user.email) : [];
 
   useEffect(() => {
     if (!user) {
       router.push('/');
     } else {
-      setProfile(prev => ({
-        ...prev,
-        name: user.name,
-        email: user.email
-      }));
+      setEditedName(user.name);
     }
   }, [user, router]);
 
   if (!user) {
-    return null;
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">Please log in to view your profile</p>
+          <Link
+            href="/"
+            className="inline-block px-6 py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+          >
+            Go to Home
+          </Link>
+        </div>
+      </div>
+    );
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProfile(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
-
-  const handleSave = () => {
+  const handleSaveName = () => {
+    // Update user name in store
+    const updatedUser = { ...user, name: editedName };
+    useAuthStore.setState({ user: updatedUser });
     setIsEditing(false);
-    // Save profile logic here - you could add this to the store
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'delivered':
-        return 'bg-green-100 text-green-700';
-      case 'processing':
-        return 'bg-blue-100 text-blue-700';
-      case 'shipped':
-        return 'bg-yellow-100 text-yellow-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
+  const handleCancelEdit = () => {
+    setEditedName(user.name);
+    setIsEditing(false);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-sm p-8">
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold">My Profile</h1>
-            {!isEditing ? (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
-              >
-                <Edit2 size={18} />
-                Edit Profile
-              </button>
-            ) : (
-              <button
-                onClick={handleSave}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-              >
-                <Save size={18} />
-                Save Changes
-              </button>
-            )}
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-light text-gray-900 mb-2">
+            My <span className="font-semibold">Profile</span>
+          </h1>
+          <p className="text-gray-600">Manage your account and view your orders</p>
+        </div>
 
-          <div className="flex items-center gap-6 mb-8 pb-8 border-b">
-            <div className="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center">
-              <User size={48} className="text-orange-600" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-semibold">{profile.name}</h2>
-              <p className="text-gray-600">{profile.email}</p>
-              {user.role === 'vendor' && (
-                <span className="inline-block mt-2 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-semibold">
-                  Vendor Account
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  name="name"
-                  value={profile.name}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-gray-50"
-                />
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Profile Info */}
+          <div className="lg:col-span-1">
+            <div className="bg-white border border-gray-100 p-8">
+              <div className="flex items-center justify-center w-24 h-24 bg-gradient-to-br from-gray-800 to-gray-600 rounded-full mx-auto mb-6 text-white text-3xl font-light">
+                {user.name.charAt(0).toUpperCase()}
               </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 text-gray-400" size={20} />
-                <input
-                  type="email"
-                  name="email"
-                  value={profile.email}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-gray-50"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-3 text-gray-400" size={20} />
-                <input
-                  type="tel"
-                  name="phone"
-                  value={profile.phone}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-gray-50"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                City
-              </label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-3 text-gray-400" size={20} />
-                <input
-                  type="text"
-                  name="city"
-                  value={profile.city}
-                  onChange={handleChange}
-                  disabled={!isEditing}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-gray-50"
-                />
-              </div>
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Address
-              </label>
-              <input
-                type="text"
-                name="address"
-                value={profile.address}
-                onChange={handleChange}
-                disabled={!isEditing}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-gray-50"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Postal Code
-              </label>
-              <input
-                type="text"
-                name="postalCode"
-                value={profile.postalCode}
-                onChange={handleChange}
-                disabled={!isEditing}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-gray-50"
-              />
-            </div>
-          </div>
-
-          <div className="mt-8 pt-8 border-t">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold flex items-center gap-2">
-                <Package size={24} />
-                Order History
-              </h3>
-              {orders.length > 0 && (
-                <Link
-                  href="/orders"
-                  className="text-orange-600 hover:text-orange-700 font-medium"
-                >
-                  View All Orders
-                </Link>
-              )}
-            </div>
-            
-            {orders.length === 0 ? (
-              <div className="text-center py-8">
-                <Package size={48} className="mx-auto text-gray-400 mb-3" />
-                <p className="text-gray-600 mb-4">You haven't placed any orders yet</p>
-                <Link
-                  href="/"
-                  className="inline-block bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700"
-                >
-                  Start Shopping
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {orders.slice(0, 3).map((order) => (
-                  <div key={order.id} className="border border-gray-200 rounded-lg p-4 hover:border-orange-500 transition-colors">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <p className="font-semibold">Order #{order.id}</p>
-                        <p className="text-sm text-gray-600 mt-1">
-                          {new Date(order.date).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </p>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(order.status)}`}>
-                        {order.status}
-                      </span>
-                    </div>
-                    <div className="text-sm text-gray-600 mb-3">
-                      {order.items.length} item{order.items.length > 1 ? 's' : ''}
-                    </div>
-                    <div className="flex justify-between items-center pt-3 border-t">
-                      <p className="font-bold">KES {order.total.toLocaleString()}</p>
-                      <button className="text-orange-600 hover:text-orange-700 font-medium">
-                        View Details
+              
+              {/* Editable Name */}
+              <div className="text-center mb-2">
+                {isEditing ? (
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      value={editedName}
+                      onChange={(e) => setEditedName(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 focus:border-gray-900 focus:outline-none text-center text-xl"
+                      placeholder="Your name"
+                    />
+                    <div className="flex gap-2 justify-center">
+                      <button
+                        onClick={handleSaveName}
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm"
+                      >
+                        <Save className="w-4 h-4" />
+                        Save
+                      </button>
+                      <button
+                        onClick={handleCancelEdit}
+                        className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors text-sm"
+                      >
+                        <X className="w-4 h-4" />
+                        Cancel
                       </button>
                     </div>
                   </div>
-                ))}
+                ) : (
+                  <div>
+                    <h2 className="text-2xl font-light text-gray-900 mb-1">
+                      {user.name}
+                    </h2>
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                    >
+                      <Edit2 className="w-3 h-3" />
+                      Edit Name
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
+              
+              {user.role === 'vendor' && (
+                <div className="flex justify-center mb-6">
+                  <span className="inline-flex items-center gap-2 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
+                    <Store className="w-4 h-4" />
+                    Vendor Account
+                  </span>
+                </div>
+              )}
+
+              <div className="space-y-4 pt-6 border-t border-gray-100">
+                <div className="flex items-center gap-3 text-gray-600">
+                  <Mail className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm break-all">{user.email}</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-600">
+                  <Calendar className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm">Member since {new Date().getFullYear()}</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-600">
+                  <Package className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm">{userOrders.length} order{userOrders.length !== 1 ? 's' : ''}</span>
+                </div>
+              </div>
+
+              {user.role === 'vendor' && (
+                <Link
+                  href="/vendor/dashboard"
+                  className="mt-6 w-full flex items-center justify-center gap-2 py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+                >
+                  <Store className="w-4 h-4" />
+                  Go to Vendor Dashboard
+                </Link>
+              )}
+
+              {/* Account Type Info */}
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <h3 className="text-sm font-medium text-gray-900 mb-3">Account Type</h3>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-2">
+                    You are signed in as a <span className="font-semibold text-gray-900">{user.role}</span>
+                  </p>
+                  {user.role === 'customer' ? (
+                    <p className="text-xs text-gray-500">
+                      Want to sell products? Contact support to upgrade to a vendor account.
+                    </p>
+                  ) : (
+                    <p className="text-xs text-gray-500">
+                      You can list and manage products in your vendor dashboard.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Orders Section */}
+          <div className="lg:col-span-2">
+            <div className="bg-white border border-gray-100 p-8">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-light text-gray-900">
+                  Order <span className="font-semibold">History</span>
+                </h2>
+                <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm font-medium">
+                  {userOrders.length} Total
+                </span>
+              </div>
+
+              {userOrders.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-50 rounded-full mb-4">
+                    <Package className="w-8 h-8 text-gray-300" />
+                  </div>
+                  <p className="text-gray-600 mb-2">No orders yet</p>
+                  <p className="text-sm text-gray-500 mb-6">
+                    Start shopping to see your orders here
+                  </p>
+                  <Link
+                    href="/shop"
+                    className="inline-block px-6 py-3 bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+                  >
+                    Start Shopping
+                  </Link>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  {userOrders.map((order) => (
+                    <div
+                      key={order.id}
+                      className="border border-gray-100 hover:shadow-md transition-shadow"
+                    >
+                      <div className="p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <p className="text-sm font-medium text-gray-900 mb-1">
+                              Order #{order.id}
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              {new Date(order.date).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                          <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                            {order.status}
+                          </span>
+                        </div>
+
+                        <div className="space-y-3 mb-4">
+                          {order.items.map((item) => (
+                            <div key={item.id} className="flex gap-4 items-center">
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className="w-16 h-16 object-cover bg-gray-50"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 truncate">
+                                  {item.name}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  Qty: {item.quantity} • ${item.price} each
+                                </p>
+                              </div>
+                              <p className="text-sm font-semibold text-gray-900">
+                                ${(item.price * item.quantity).toLocaleString()}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
+                          <p className="text-sm text-gray-600">Total Amount</p>
+                          <p className="text-lg font-semibold text-gray-900">
+                            ${order.total.toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

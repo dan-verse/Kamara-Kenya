@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Search, User, ShoppingCart, ChevronDown, LogOut } from 'lucide-react';
 import { useStore, useAuthStore } from '@/lib/store';
 import AuthModal from './AuthModal';
@@ -30,6 +30,7 @@ const navItems = [
 export default function Navigation() {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
@@ -51,7 +52,7 @@ export default function Navigation() {
   const getActiveNav = () => {
     if (pathname === '/') return 'Home';
     if (pathname === '/shop') {
-      const category = new URLSearchParams(window.location.search).get('category');
+      const category = searchParams.get('category');
       return category || 'Shop';
     }
     return null;
@@ -121,7 +122,7 @@ export default function Navigation() {
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
               <h1 className="text-2xl font-light tracking-tight text-gray-900">
-                Furni<span className="font-semibold">Hub</span>
+                Ka<span className="font-semibold">Mara</span>
               </h1>
             </Link>
 

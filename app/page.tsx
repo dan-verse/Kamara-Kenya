@@ -35,23 +35,23 @@ const categories = [
 const features = [
   {
     icon: Truck,
-    title: "Fast Delivery",
-    description: "Free shipping on orders over $500",
+    title: "Fast and Reliable Delivery",
+    description: "Ensuring timely and dependable delivery services across the continent",
   },
   {
     icon: Shield,
     title: "Secure Payment",
-    description: "100% secure transactions",
+    description: "Pay with popular and secure payment methods",
   },
   {
     icon: Package,
-    title: "Easy Returns",
-    description: "30-day return policy",
+    title: "Wide Product Range",
+    description: "Offering an extensive selection of products across multiple categories",
   },
   {
     icon: HeadphonesIcon,
     title: "24/7 Support",
-    description: "Dedicated customer service",
+    description: "We'll respond to you within hours",
   },
 ];
 

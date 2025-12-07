@@ -16,7 +16,10 @@ export interface Product {
   rating: number;
   reviews: number;
   inStock: boolean;
-  description: string;
+  description?: string;
+  removeProduct: (id: number) => void;
+  updateProduct: (id: number, updates: Partial<Product>) => void;
+
 }
 
 export interface CartItem extends Product {
@@ -25,8 +28,9 @@ export interface CartItem extends Product {
 
 export interface Order {
   id: number;
+  userId: string; // Added to track which user made the order
   items: CartItem[];
   total: number;
   date: string;
-  status: 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  status: 'Processing' | 'Shipped' | 'Delivered';
 }

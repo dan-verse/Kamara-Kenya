@@ -20,17 +20,17 @@ interface AuthState {
 }
 
 interface StoreState {
+  updateProduct: any;
+  removeProduct: any;
   products: Product[];
   cart: CartItem[];
   orders: Order[];
   wishlist: Product[];
-  addProduct: (
-    product: Omit<Product, "id" | "rating" | "reviews" | "inStock">
-  ) => void;
+  addProduct: (product: Product) => void;
   addToCart: (product: Product) => void;
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
-  placeOrder: (items: CartItem[], total: number) => Order;
+  placeOrder: (items: CartItem[], total: number, userId: string) => Order;
   toggleWishlist: (product: Product) => void;
   isInWishlist: (productId: number) => boolean;
 }
@@ -49,6 +49,12 @@ const initialProducts: Product[] = [
     reviews: 124,
     inStock: true,
     description: "Premium Italian leather with solid oak frame",
+    removeProduct: function (id: number): void {
+      throw new Error("Function not implemented.");
+    },
+    updateProduct: function (id: number, updates: Partial<Product>): void {
+      throw new Error("Function not implemented.");
+    }
   },
   {
     id: 2,
@@ -62,6 +68,12 @@ const initialProducts: Product[] = [
     reviews: 89,
     inStock: true,
     description: "Solid oak with minimalist design",
+    removeProduct: function (id: number): void {
+      throw new Error("Function not implemented.");
+    },
+    updateProduct: function (id: number, updates: Partial<Product>): void {
+      throw new Error("Function not implemented.");
+    }
   },
   {
     id: 3,
@@ -75,6 +87,12 @@ const initialProducts: Product[] = [
     reviews: 203,
     inStock: true,
     description: "Mesh back with lumbar support",
+    removeProduct: function (id: number): void {
+      throw new Error("Function not implemented.");
+    },
+    updateProduct: function (id: number, updates: Partial<Product>): void {
+      throw new Error("Function not implemented.");
+    }
   },
   {
     id: 4,
@@ -88,6 +106,12 @@ const initialProducts: Product[] = [
     reviews: 67,
     inStock: true,
     description: "Walnut finish with adjustable shelves",
+    removeProduct: function (id: number): void {
+      throw new Error("Function not implemented.");
+    },
+    updateProduct: function (id: number, updates: Partial<Product>): void {
+      throw new Error("Function not implemented.");
+    }
   },
   {
     id: 5,
@@ -101,6 +125,12 @@ const initialProducts: Product[] = [
     reviews: 92,
     inStock: true,
     description: "Plush velvet with gold metal legs",
+    removeProduct: function (id: number): void {
+      throw new Error("Function not implemented.");
+    },
+    updateProduct: function (id: number, updates: Partial<Product>): void {
+      throw new Error("Function not implemented.");
+    }
   },
   {
     id: 6,
@@ -114,6 +144,12 @@ const initialProducts: Product[] = [
     reviews: 156,
     inStock: true,
     description: "Reclaimed wood with steel frame",
+    removeProduct: function (id: number): void {
+      throw new Error("Function not implemented.");
+    },
+    updateProduct: function (id: number, updates: Partial<Product>): void {
+      throw new Error("Function not implemented.");
+    }
   },
 ];
 
@@ -199,9 +235,21 @@ export const useStore = create<StoreState>()(
             ),
           };
         }),
-      placeOrder: (items, total) => {
+      removeProduct: (id: number) =>
+  set((state) => ({
+    products: state.products.filter((p) => p.id !== id),
+  })),
+
+updateProduct: (id: number, updates: Partial<Product>) =>
+  set((state) => ({
+    products: state.products.map((p) =>
+      p.id === id ? { ...p, ...updates } : p
+    ),
+  })),
+      placeOrder: (items, total, userId) => {
         const order: Order = {
           id: Date.now(),
+          userId, // Added userId to track which user made the order
           items,
           total,
           date: new Date().toISOString(),

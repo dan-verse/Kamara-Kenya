@@ -53,7 +53,7 @@ export default function Footer() {
           <div className="lg:col-span-4">
             <Link href="/" className="inline-block mb-4">
               <h2 className="text-2xl font-light tracking-tight text-gray-900">
-                Furni<span className="font-semibold">Hub</span>
+                Ka<span className="font-semibold">Mara</span>
               </h2>
             </Link>
             <p className="text-gray-600 mb-6 leading-relaxed">
@@ -69,7 +69,7 @@ export default function Footer() {
                   hover:text-gray-900 transition-colors"
               >
                 <Phone className="w-4 h-4" />
-                +1 (234) 567-890
+                +254 114 511 064
               </a>
               <a
                 href="mailto:hello@furnihub.com"
@@ -77,11 +77,11 @@ export default function Footer() {
                   hover:text-gray-900 transition-colors"
               >
                 <Mail className="w-4 h-4" />
-                hello@furnihub.com
+                <span>info@kamara.africa<br />support@kamara.africa</span>
               </a>
               <div className="flex items-start gap-3 text-sm text-gray-600">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>123 Furniture Street<br />New York, NY 10001</span>
+                <span>Head Office<br />Nairobi, Kenya</span>
               </div>
             </div>
 
@@ -193,7 +193,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-gray-600">
-              © {new Date().getFullYear()} FurniHub. All rights reserved.
+              © {new Date().getFullYear()} Kamara. All rights reserved.
             </p>
 
             {/* Payment Methods */}
