@@ -18,7 +18,7 @@ export default function CartPage() {
 
   const handleCheckout = () => {
     if (user) {
-      placeOrder([...cart], cartTotal);
+      placeOrder([...cart], cartTotal, String(user.id));
       alert('Order placed successfully!');
       router.push('/profile');
     } else {
